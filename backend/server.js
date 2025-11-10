@@ -16,8 +16,9 @@ const regionRoutes = require('./src/routes/region');
 const app = express();
 connectDB();
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
+
 app.use('/api/auth', authRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/permissions", permRoutes);
@@ -28,5 +29,5 @@ app.use('/api/vehicles',     vehicleRoutes);
 app.use("/api/admin",     adminRoutes);
 app.use('/api/region', regionRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5005;
 app.listen(PORT, () => console.log(`🚀 Server listening on ${PORT}`));

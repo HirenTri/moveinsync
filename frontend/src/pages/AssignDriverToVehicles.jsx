@@ -24,7 +24,7 @@ export default function AssignDriverToVehicle() {
 
         // Load vehicles and drivers if permission is present
         const [vehRes, drvRes] = await Promise.all([
-          api.get('/vehicles'),
+          api.get('/vehicles/all'),
           api.get('/users/drivers/region'),
         ]);
         setVehicles(vehRes.data);
@@ -82,7 +82,10 @@ export default function AssignDriverToVehicle() {
           <p>Loading…</p>
         ) : !permissions.includes('Assign Vehicles') ? (
           <div className="bg-red-100 text-red-700 p-4 rounded">
-            You do not have permission to assign drivers to vehicles.
+            You do not have permission to assign drivers to Vehicles
+            <div className="mt-2 text-sm">
+              <strong>Your permissions:</strong> {JSON.stringify(permissions)}
+            </div>
           </div>
         ) : (
           <table className="min-w-full bg-white rounded shadow overflow-auto">

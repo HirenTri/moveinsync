@@ -58,8 +58,9 @@ router.get('/', authMw, async (req, res) => {
 });
 /* ----------  LIST ALL VEHICLES FOR SUPER VENDOR ---------- */
 router.get('/all', authMw, async (req, res) => {
-  if (req.user.role !== 'super_vendor') {
-    return res.status(403).json({ msg: 'Access denied' });
+  console.log(req.user.role)
+  if (req.user.role !== 'super_vendor' && req.user.role!=="regional_vendor") {
+    return res.status(403).json({ msg: 'Access denied '+req.user.role });
   }
   const list = await Vehicle.find({}).select('-__v').sort('-createdAt');
   res.json(list);

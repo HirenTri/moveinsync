@@ -1,3 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 font-sans text-secondary-900;
+  }
+}
+
+@layer components {
+  /* Glass Morphism Effect */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-soft;
+  }
+  
+  .glass-dark {
+    @apply bg-secondary-800/70 backdrop-blur-md border border-white/10 shadow-soft;
+  }
+
+  /* Modern Card Styles */
+  .card {
+    @apply bg-white rounded-2xl shadow-soft border border-gray-100 p-6 transition-all duration-300 hover:shadow-medium hover:-translate-y-1;
+  }
+  
+  .card-dark {
+    @apply bg-secondary-800 rounded-2xl shadow-soft border border-secondary-700 p-6 transition-all duration-300 hover:shadow-medium hover:-translate-y-1;
+  }
+
+  /* Modern Button Styles */
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 
+           text-white font-medium px-6 py-3 rounded-xl shadow-soft 
+           transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-medium
+           focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  }
+  
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-secondary-700 font-medium px-6 py-3 
+           rounded-xl border border-gray-200 shadow-soft
+           transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-medium
+           focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-2;
+  }
+  
+  .btn-success {
+    @apply bg-gradient-to-r from-success-500 to-success-600 hover:from-success-600 hover:to-success-700 
+           text-white font-medium px-6 py-3 rounded-xl shadow-soft 
+           transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-medium;
+  }
+  
+  .btn-danger {
+    @apply bg-gradient-to-r from-danger-500 to-danger-600 hover:from-danger-600 hover:to-danger-700 
+           text-white font-medium px-6 py-3 rounded-xl shadow-soft 
+           transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-medium;
+  }
+
+  /* Modern Input Styles */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 
+           focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 
+           transition-all duration-300 bg-white/70 backdrop-blur-sm
+           placeholder:text-gray-400;
+  }
+  
+  .input-error {
+    @apply border-danger-300 focus:border-danger-500 focus:ring-danger-500/20;
+  }
+
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .badge-success {
+    @apply bg-success-100 text-success-800;
+  }
+  
+  .badge-warning {
+    @apply bg-warning-100 text-warning-800;
+  }
+  
+  .badge-danger {
+    @apply bg-danger-100 text-danger-800;
+  }
+  
+  .badge-info {
+    @apply bg-primary-100 text-primary-800;
+  }
+
+  /* Alert Styles */
+  .alert {
+    @apply p-4 rounded-xl border-l-4 shadow-soft backdrop-blur-sm;
+  }
+  
+  .alert-success {
+    @apply bg-success-50/80 border-success-500 text-success-800;
+  }
+  
+  .alert-warning {
+    @apply bg-warning-50/80 border-warning-500 text-warning-800;
+  }
+  
+  .alert-danger {
+    @apply bg-danger-50/80 border-danger-500 text-danger-800;
+  }
+  
+  .alert-info {
+    @apply bg-primary-50/80 border-primary-500 text-primary-800;
+  }
+
+  /* Loading Spinner */
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-gray-300 border-t-primary-500;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent;
+  }
+
+  /* Sidebar Animation */
+  .sidebar-enter {
+    @apply transform -translate-x-full;
+  }
+  
+  .sidebar-enter-active {
+    @apply transform translate-x-0 transition-transform duration-300 ease-out;
+  }
+  
+  .sidebar-exit {
+    @apply transform translate-x-0;
+  }
+  
+  .sidebar-exit-active {
+    @apply transform -translate-x-full transition-transform duration-300 ease-in;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
