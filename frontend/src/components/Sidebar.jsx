@@ -53,7 +53,7 @@ export default function Sidebar() {
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-white to-teal-200 bg-clip-text text-transparent">
                 VMS Portal
               </h2>
               <p className="text-sm text-gray-300 capitalize">{role?.replace('_', ' ')}</p>
@@ -83,7 +83,7 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `group flex items-center px-4 py-3 rounded-xl transition-all duration-300 ${
                 isActive 
-                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105" 
+                  ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg transform scale-105" 
                   : "text-gray-300 hover:text-white hover:bg-white/10 hover:transform hover:translate-x-1"
               }`
             }
@@ -101,7 +101,7 @@ export default function Sidebar() {
       <div className="p-4">
         <button
           onClick={logout}
-          className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
+          className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
         >
           <LogOut className={`${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
           {!isCollapsed && <span className="ml-2">Logout</span>}
@@ -115,7 +115,7 @@ export default function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
       >
         <Menu className="w-5 h-5" />
       </button>

@@ -9,6 +9,10 @@ import {
   UploadCloud,
   Eye,
   Truck,
+  Mail,
+  Shield,
+  CheckCircle,
+  FileText,
 } from "lucide-react";
 
 const REGIONS = [
@@ -58,7 +62,8 @@ export default function DriverDashboard() {
     try {
       const { data } = await api.patch("/auth/me", { region });
       setUser(data);
-      setMsg("Region saved!");
+      setMsg("Region saved successfully!");
+      setTimeout(() => setMsg(""), 3000);
     } catch {
       setMsg("Failed to save region");
     }
@@ -79,8 +84,10 @@ export default function DriverDashboard() {
       });
       setDoc(data);
       setFile(null);
+      setMsg("License uploaded successfully!");
+      setTimeout(() => setMsg(""), 3000);
     } catch {
-      // handle error silently
+      setMsg("Failed to upload license");
     } finally {
       setLoading(false);
     }
@@ -89,139 +96,198 @@ export default function DriverDashboard() {
   if (!user) return null;
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <Sidebar />
 
       <main className="flex-1 p-6 lg:p-12 space-y-8">
-        <h1 className="text-3xl font-bold text-gray-800">Driver Dashboard</h1>
+        {/* Page Header */}
+        <div>
+          <h1 className="text-4xl font-extrabold text-white mb-2">Driver Control Center</h1>
+          <p className="text-gray-400">Review your profile, certifications, and vehicle assignments</p>
+        </div>
 
-        {/* Profile & Region */}
-        <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-          <div className="flex items-center bg-gradient-to-r from-green-600 to-teal-600 p-6">
-            <UserCircle2 className="w-16 h-16 text-white mr-4" />
+        {/* STATUS MESSAGE */}
+        {msg && (
+          <div className={`p-4 rounded-xl flex items-center space-x-3 ${
+            msg.includes('successfully') 
+              ? 'bg-green-500/20 border border-green-500/50 text-green-200' 
+              : 'bg-red-500/20 border border-red-500/50 text-red-200'
+          }`}>
+            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+            <span>{msg}</span>
+          </div>
+        )}
+
+        {/* PROFILE HERO CARD */}
+        <div className="relative bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl shadow-2xl p-8 overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
+          <div className="relative flex items-center space-x-6">
+            <div className="p-4 bg-white/20 backdrop-blur-lg rounded-2xl border border-white/30">
+              <UserCircle2 className="w-24 h-24 text-white" />
+            </div>
             <div>
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-3xl font-bold text-white mb-2">
                 {user.firstName} {user.lastName}
               </h2>
-              <p className="text-green-100">{user.email}</p>
+              <div className="flex items-center space-x-2 text-white/90 mb-2">
+                <Mail className="w-4 h-4" />
+                <span>{user.email}</span>
+              </div>
+              <div className="flex items-center space-x-2 text-white/90">
+                <Shield className="w-4 h-4" />
+                <span className="capitalize font-semibold">{user.role?.replace('_', ' ')}</span>
+              </div>
             </div>
-          </div>
-          <div className="p-6 space-y-6">
-            <div className="flex items-center text-gray-700 space-x-2">
-              <MapPin className="w-5 h-5 text-green-500" />
-              <span>
-                <strong>Current Region:</strong>{" "}
-                {user.region
-                  ? REGIONS.find(r => r.value === user.region)?.label
-                  : "Not set"}
-              </span>
-            </div>
-
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Change Region
-              </label>
-              <select
-                value={region}
-                onChange={e => setRegion(e.target.value)}
-                className="appearance-none w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-              >
-                <option value="">Select a region...</option>
-                {REGIONS.map(r => (
-                  <option key={r.value} value={r.value}>
-                    {r.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            </div>
-
-            <button
-              onClick={saveRegion}
-              className="w-full py-2 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition"
-            >
-              Save Region
-            </button>
-
-            {msg && (
-              <p className="text-sm text-green-600 text-center">{msg}</p>
-            )}
           </div>
         </div>
 
-        {/* License Upload */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Driving License
+        {/* ACCOUNT INFO & REGION GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Account Information */}
+          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-white mb-6 flex items-center space-x-2">
+              <Shield className="w-5 h-5 text-teal-400" />
+              <span>Personal Details</span>
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Full Name</p>
+                <p className="text-white font-medium">{user.firstName} {user.lastName}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Email Address</p>
+                <p className="text-white font-medium">{user.email}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Current Zone</p>
+                <p className="text-teal-300 font-medium">
+                  {user.region
+                    ? REGIONS.find(r => r.value === user.region)?.label
+                    : "Not assigned"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Zone Assignment */}
+          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-white mb-6 flex items-center space-x-2">
+              <MapPin className="w-5 h-5 text-teal-400" />
+              <span>Zone Control</span>
+            </h3>
+            <div className="space-y-4">
+              <div className="relative">
+                <label className="block text-white font-semibold mb-3">
+                  Operating Zone
+                </label>
+                <select
+                  value={region}
+                  onChange={e => setRegion(e.target.value)}
+                  className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition appearance-none"
+                >
+                  <option value="" className="bg-gray-800">Pick zone...</option>
+                  {REGIONS.map(r => (
+                    <option key={r.value} value={r.value} className="bg-gray-800">
+                      {r.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                onClick={saveRegion}
+                className="w-full py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                Confirm Zone
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* LICENSE SECTION */}
+        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
+          <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+            <FileText className="w-6 h-6 text-teal-400" />
+            <span>Professional Certification</span>
           </h2>
 
-          {doc ? (
-            <button
-              onClick={() => window.open(`${API_BASE}${doc.filePath}`, "_blank")}
-              className="flex items-center text-teal-600 hover:underline space-x-2"
-            >
-              <Eye className="w-5 h-5" />
-              <span>View Current License</span>
-            </button>
-          ) : (
-            <p className="text-gray-500">No license uploaded.</p>
-          )}
+          <div className="space-y-6">
+            {doc ? (
+              <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                <p className="text-green-300 text-sm mb-3">Certification uploaded and verified</p>
+                <button
+                  onClick={() => window.open(`${API_BASE}${doc.filePath}`, "_blank")}
+                  className="flex items-center space-x-2 text-teal-400 hover:text-teal-300 font-medium transition"
+                >
+                  <Eye className="w-5 h-5" />
+                  <span>View Certification</span>
+                </button>
+              </div>
+            ) : (
+              <p className="text-gray-400">No certification uploaded yet.</p>
+            )}
 
-          <div className="flex items-center space-x-4">
-            <label className="flex items-center space-x-2 cursor-pointer">
-              <UploadCloud className="w-6 h-6 text-gray-500" />
-              <span className="text-gray-700">Choose File</span>
-              <input type="file" onChange={onFileChange} className="hidden" />
-            </label>
-            <button
-              onClick={uploadLicense}
-              disabled={!file || loading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
-            >
-              {loading ? "Uploading..." : "Upload License"}
-            </button>
+            <div className="border-t border-white/10 pt-6">
+              <p className="text-white font-semibold mb-4">Upload Professional Document</p>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center justify-center px-6 py-3 bg-white/5 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-teal-500/50 hover:bg-white/10 transition">
+                  <div className="flex items-center space-x-2">
+                    <UploadCloud className="w-5 h-5 text-teal-400" />
+                    <span className="text-gray-300">Select Document</span>
+                  </div>
+                  <input type="file" onChange={onFileChange} className="hidden" />
+                </label>
+                <button
+                  onClick={uploadLicense}
+                  disabled={!file || loading}
+                  className="px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg disabled:shadow-none"
+                >
+                  {loading ? "Processing..." : "Upload"}
+                </button>
+              </div>
+              {file && (
+                <p className="text-teal-300 text-sm mt-3 flex items-center space-x-1">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>File: <strong>{file.name}</strong></span>
+                </p>
+              )}
+            </div>
           </div>
-          {file && (
-            <p className="text-sm text-gray-600">
-              Selected: <strong>{file.name}</strong>
-            </p>
-          )}
         </div>
 
-        {/* Assigned Vehicles */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
-            <Truck className="w-6 h-6 text-gray-600" />
-            <span>My Assigned Vehicles</span>
+        {/* ASSIGNED VEHICLES */}
+        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
+          <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+            <Truck className="w-6 h-6 text-teal-400" />
+            <span>Fleet Assignments</span>
           </h2>
 
           {assigned.length === 0 ? (
-            <p className="text-gray-600">No vehicles assigned yet.</p>
+            <p className="text-gray-400 text-center py-8">No vehicles assigned yet.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
-                <thead className="bg-gray-100">
-                  <tr>
+                <thead>
+                  <tr className="border-b border-white/10">
                     {[
-                      "Reg. Number",
-                      "Model",
-                      "Seating",
-                      "Fuel",
-                      "Assigned On",
+                      "License Plate",
+                      "Vehicle Model",
+                      "Capacity",
+                      "Fuel Type",
+                      "Assigned Date",
                     ].map(h => (
-                      <th key={h} className="p-3 text-left">{h}</th>
+                      <th key={h} className="p-4 text-left text-gray-300 font-semibold">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {assigned.map(v => (
-                    <tr key={v._id} className="border-b hover:bg-gray-50">
-                      <td className="p-3">{v.registrationNumber}</td>
-                      <td className="p-3">{v.model}</td>
-                      <td className="p-3">{v.seatingCapacity}</td>
-                      <td className="p-3">{v.fuelType}</td>
-                      <td className="p-3">
-                        {new Date(v.updatedAt || v.createdAt).toLocaleDateString()}
+                    <tr key={v._id} className="border-b border-white/10 hover:bg-white/5 transition">
+                      <td className="p-4 text-white font-medium">{v.registrationNumber}</td>
+                      <td className="p-4 text-white">{v.model}</td>
+                      <td className="p-4 text-gray-300">{v.seatingCapacity} persons</td>
+                      <td className="p-4 text-gray-300">{v.fuelType}</td>
+                      <td className="p-4 text-gray-300">
+                        {new Date(v.updatedAt || v.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                       </td>
                     </tr>
                   ))}

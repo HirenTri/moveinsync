@@ -1,12 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const { getCache, setCache } = require('../utils/redis');
 const authMw  = require('../middleware/auth');
 
 // GET /api/users: list all users with permissions
 router.get('/', async (req, res) => {
   try {
+    // Try cache first
+    const cacheKey = 'users:all';
+    const cached = await getCache(cacheKey);
+    if (cached) {
+      return res.json(JSON.parse(cached));
+    }
+    // If not cached, fetch from DB
     const users = await User.find().select('firstName lastName email role customPermissions');
+    await setCache(cacheKey, JSON.stringify(users), 300); // cache for 5 min
     res.json(users);
   } catch (err) {
     console.error(err);

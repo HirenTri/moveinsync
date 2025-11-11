@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 const buttonStyles = {
   variant: {
-    primary: "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl focus:ring-blue-500/50",
+  primary: "bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl focus:ring-teal-500/50",
     secondary: "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl focus:ring-blue-500/50",
     success: "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl focus:ring-green-500/50",
     danger: "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl focus:ring-red-500/50",

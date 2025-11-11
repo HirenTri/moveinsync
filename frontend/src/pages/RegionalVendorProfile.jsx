@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axiosClient';
 import Sidebar from '../components/Sidebar';
-import { UserCircle2, MapPin, Calendar, Globe } from 'lucide-react';
+import { UserCircle2, MapPin, Calendar, Globe, Mail, Shield, CheckCircle } from 'lucide-react';
 
 const REGIONS = [
   { value: 'northern', label: 'Northern' },
@@ -16,6 +16,7 @@ export default function RegionalVendorProfile() {
   const [user,   setUser]   = useState(null);
   const [region, setRegion] = useState('');
   const [msg,    setMsg]    = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     api.get('/auth/me').then(res => {
@@ -26,89 +27,151 @@ export default function RegionalVendorProfile() {
 
   const handleSave = async () => {
     setMsg('');
+    setLoading(true);
     try {
       const { data } = await api.patch('/auth/me', { region });
       setUser(data);
-      setMsg('Profile updated!');
+      setMsg('Profile updated successfully!');
+      setTimeout(() => setMsg(''), 3000);
     } catch (err) {
       setMsg(err.response?.data?.message || 'Update failed, please try again');
+    } finally {
+      setLoading(false);
     }
   };
 
   if (!user) return null;
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <Sidebar />
 
       <main className="flex-1 p-6 lg:p-12">
-        <h1 className="text-4xl font-extrabold mb-8 text-gray-800">
-          Regional Vendor Profile
-        </h1>
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-extrabold text-white mb-2">Branch Manager Profile</h1>
+          <p className="text-gray-400">Configure your regional operations and business settings</p>
+        </div>
 
-        <div className="max-w-3xl mx-auto grid gap-8">
-          {/* PROFILE HEADER CARD */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 flex items-center space-x-6">
-            <div className="p-2 bg-green-100 rounded-full">
-              <UserCircle2 className="w-20 h-20 text-green-600" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900">
-                {user.firstName} {user.lastName}
-              </h2>
-              <p className="text-gray-600">{user.email}</p>
+        <div className="max-w-4xl mx-auto grid gap-8">
+          {/* PROFILE HERO CARD */}
+          <div className="relative bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl shadow-2xl p-8 overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
+            <div className="relative flex items-center space-x-6">
+              <div className="p-4 bg-white/20 backdrop-blur-lg rounded-2xl border border-white/30">
+                <UserCircle2 className="w-24 h-24 text-white" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">
+                  {user.firstName} {user.lastName}
+                </h2>
+                <div className="flex items-center space-x-2 text-white/90 mb-2">
+                  <Mail className="w-4 h-4" />
+                  <span>{user.email}</span>
+                </div>
+                <div className="flex items-center space-x-2 text-white/90">
+                  <Shield className="w-4 h-4" />
+                  <span className="capitalize font-semibold">{user.role?.replace('_', ' ')}</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* DETAILS FORM */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            {msg && (
-              <div className="mb-6 p-4 bg-green-50 text-green-700 rounded-lg">
-                {msg}
-              </div>
-            )}
+          {/* STATUS MESSAGE */}
+          {msg && (
+            <div className={`p-4 rounded-xl flex items-center space-x-3 ${
+              msg.includes('successfully') 
+                ? 'bg-green-500/20 border border-green-500/50 text-green-200' 
+                : 'bg-red-500/20 border border-red-500/50 text-red-200'
+            }`}>
+              <CheckCircle className="w-5 h-5 flex-shrink-0" />
+              <span>{msg}</span>
+            </div>
+          )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Region */}
-              <div>
-                <label className="flex items-center text-gray-700 mb-2">
-                  <Globe className="w-5 h-5 mr-2 text-green-500" />
-                  <span className="font-medium">Region</span>
-                </label>
-                <select
-                  value={region}
-                  onChange={e => setRegion(e.target.value)}
-                  className="w-full border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-green-500 focus:border-green-500"
-                >
-                  <option value="">Select region...</option>
-                  {REGIONS.map(r => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
-                    </option>
-                  ))}
-                </select>
+          {/* ACCOUNT DETAILS GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Account Information Card */}
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center space-x-2">
+                <Shield className="w-5 h-5 text-teal-400" />
+                <span>Manager Information</span>
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Manager Name</p>
+                  <p className="text-white font-medium">{user.firstName} {user.lastName}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Business Email</p>
+                  <p className="text-white font-medium">{user.email}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Organization Role</p>
+                  <p className="text-white font-medium capitalize">{user.role?.replace('_', ' ')}</p>
+                </div>
               </div>
+            </div>
 
-              {/* Joined On */}
-              <div>
-                <label className="flex items-center text-gray-700 mb-2">
-                  <Calendar className="w-5 h-5 mr-2 text-green-500" />
-                  <span className="font-medium">Joined On</span>
-                </label>
-                <input
-                  type="text"
-                  readOnly
-                  value={new Date(user.createdAt).toLocaleDateString()}
-                  className="w-full border-gray-300 rounded-lg shadow-sm px-4 py-2 bg-gray-50"
-                />
+            {/* Account Timeline Card */}
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center space-x-2">
+                <Calendar className="w-5 h-5 text-teal-400" />
+                <span>Partnership Details</span>
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Onboarding Date</p>
+                  <p className="text-white font-medium">{new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Partnership Status</p>
+                  <p className="text-green-400 font-medium flex items-center space-x-1">
+                    <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                    <span>Confirmed</span>
+                  </p>
+                </div>
               </div>
+            </div>
+          </div>
+
+          {/* SETTINGS FORM */}
+          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
+            <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+              <Globe className="w-6 h-6 text-teal-400" />
+              <span>Territory Assignment</span>
+            </h3>
+
+            <div className="mb-6">
+              <label className="block text-white font-semibold mb-3">
+                Manage Territory
+              </label>
+              <select
+                value={region}
+                onChange={e => setRegion(e.target.value)}
+                className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+              >
+                <option value="" className="bg-gray-800">Pick your territory...</option>
+                {REGIONS.map(r => (
+                  <option key={r.value} value={r.value} className="bg-gray-800">
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+              {region && (
+                <p className="mt-3 text-teal-300 text-sm flex items-center space-x-1">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Territory: <strong>{REGIONS.find(r => r.value === region)?.label}</strong></span>
+                </p>
+              )}
             </div>
 
             <button
               onClick={handleSave}
-              className="mt-8 w-full py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition"
+              disabled={loading}
+              className="w-full py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
             >
-              Save Changes
+              {loading ? 'Processing...' : 'Apply Changes'}
             </button>
           </div>
         </div>
