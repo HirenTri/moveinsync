@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthProvider from "./context/AuthContext.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import SuperDash from "./pages/SuperVendorDashBoard.jsx";

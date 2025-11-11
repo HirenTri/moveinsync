@@ -1,7 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const Permission = require("../src/models/Permission");
-
 const permissions = [
   { permissionName: "vehicle:read",        description: "View vehicles" },
   { permissionName: "vehicle:manage",      description: "Add, edit or delete vehicles" },
