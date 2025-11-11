@@ -169,7 +169,7 @@ DATA LAYER
 
 - JWT token-based authentication (8-hour expiry)
 - Password hashing with bcrypt (10 rounds)
-- Role-based access control (5 roles)
+- Role-based access control (3 roles)
 - Custom permission assignment system
 - File upload validation & storage
 - Database unique indexes
